@@ -1,14 +1,26 @@
-import React from 'react'
+import React from "react"
+import { Link } from "gatsby"
+import styled from "styled-components"
 
-import Layout from '../components/layout'
-import SEO from '../components/seo'
-
+const Container = styled.div`
+  color: #333;
+  width: 100%;
+  height: 90vh;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  a {
+    color: #9e8f86;
+  }
+`
 const NotFoundPage = () => (
-  <Layout>
-    <SEO title='404: Not found' />
-    <h1>NOT FOUND</h1>
-    <p>You just hit a route that doesn&#39;t exist... the sadness.</p>
-  </Layout>
+  <Container>
+    <h1 className="content-title">Error 404</h1>
+    <section className="content-body">
+      Page not found, <Link to="/"> return home </Link> to start over
+    </section>
+  </Container>
 )
 
 export default NotFoundPage
