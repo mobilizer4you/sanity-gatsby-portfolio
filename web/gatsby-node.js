@@ -1,21 +1,17 @@
-const {isFuture} = require('date-fns')
-/**
- * Implement Gatsby's Node APIs in this file.
- *
- * See: https://www.gatsbyjs.org/docs/node-apis/
- */
+const path = require("path")
 
-async function createProjectPages (graphql, actions, reporter) {
-  const {createPage} = actions
+exports.createPages = async ({ actions, graphql }) => {
   const result = await graphql(`
     {
-      allSanitySampleProject(filter: {slug: {current: {ne: null}}, publishedAt: {ne: null}}) {
+      allSanityProject {
         edges {
           node {
-            id
-            publishedAt
+            title
             slug {
               current
+            }
+            categories {
+              title
             }
           }
         }
@@ -23,27 +19,15 @@ async function createProjectPages (graphql, actions, reporter) {
     }
   `)
 
-  if (result.errors) throw result.errors
-
-  const projectEdges = (result.data.allSanitySampleProject || {}).edges || []
-
-  projectEdges
-    .filter(edge => !isFuture(edge.node.publishedAt))
-    .forEach(edge => {
-      const id = edge.node.id
-      const slug = edge.node.slug.current
-      const path = `/project/${slug}/`
-
-      reporter.info(`Creating project page: ${path}`)
-
-      createPage({
-        path,
-        component: require.resolve('./src/templates/project.js'),
-        context: {id}
-      })
+  const project = result.data.allSanityProject.edges.map(({ node }) => node)
+  project.forEach(project => {
+    actions.createPage({
+      path: project.slug.current,
+      component: path.resolve("src/templates/project.js"),
+      context: {
+        slug: project.slug.current,
+        cat: project.categories[0].title,
+      },
     })
-}
-
-exports.createPages = async ({graphql, actions, reporter}) => {
-  await createProjectPages(graphql, actions, reporter)
+  })
 }

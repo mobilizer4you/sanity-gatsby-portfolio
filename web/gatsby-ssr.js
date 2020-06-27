@@ -5,3 +5,15 @@
  */
 
 // You can delete this file if you're not using it
+const React = require("react")
+exports.onRenderBody = ({ setPostBodyComponents }) => {
+  setPostBodyComponents([
+    <script
+      dangerouslySetInnerHTML={{
+        __html: `
+        console.log("Welcome To Our Website")
+       `,
+      }}
+    />,
+  ])
+}
